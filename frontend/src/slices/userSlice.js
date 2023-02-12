@@ -1,4 +1,4 @@
-import { createSlice, creatAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import userService from '../services/userService'
 
 const initialState = {
@@ -10,7 +10,7 @@ const initialState = {
 }
 
 //get user details
-export const profile = creatAsyncThunk(
+export const profile = createAsyncThunk(
   'user/profile',
   async (user, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token
@@ -33,7 +33,7 @@ export const userSlice = createSlice({
     builder
       .addCase(profile.pending, state => {
         state.loading = true
-        state.error = false
+        state.error = null
       })
       .addCase(profile.fulfilled, (state, action) => {
         state.loading = false
