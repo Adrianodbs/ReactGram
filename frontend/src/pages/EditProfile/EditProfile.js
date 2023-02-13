@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 // Redux
-import { profile, resetMessage } from '../../slices/userSlice'
+import { profile, resetMessage, updateProfile } from '../../slices/userSlice'
 
 // Components
 import Message from '../../components/Message'
@@ -40,8 +40,40 @@ function EditProfile() {
 
   console.log(user)
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
+
+    // Gather user data from states
+    const userData = {
+      name
+    }
+
+    if (profileImage) {
+      userData.profileImage = profileImage
+    }
+
+    if (bio) {
+      userData.bio = bio
+    }
+
+    if (password) {
+      userData.password = password
+    }
+
+    // build form data
+    const formData = new FormData()
+
+    const userFormData = Object.keys(userData).forEach(key =>
+      formData.append(key, userData[key])
+    )
+
+    formData.append('user', userFormData)
+
+    await dispatch(updateProfile(formData))
+
+    setTimeout(() => {
+      dispatch(resetMessage())
+    }, 2000)
   }
 
   const handleFile = e => {
@@ -102,7 +134,10 @@ function EditProfile() {
             value={password || ''}
           />
         </label>
-        <input type="sumbit" value="Atualizar" />
+        {!loading && <input type="submit" value="Atualizar" />}
+        {loading && <input type="submit" value="Aguarde..." disabled />}
+        {error && <Message msg={error} type="error" />}
+        {message && <Message msg={message} type="success" />}
       </form>
     </div>
   )
