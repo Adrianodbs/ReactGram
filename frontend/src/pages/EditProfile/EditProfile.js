@@ -38,8 +38,6 @@ function EditProfile() {
     }
   }, [user])
 
-  console.log(user)
-
   const handleSubmit = async e => {
     e.preventDefault()
 
